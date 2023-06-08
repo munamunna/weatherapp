@@ -24,7 +24,7 @@ function displayNews(data) {
         <div class="news-content">
             <div class="news-title">${name}</div>
             <div class="news-description">${desc}</div>
-            <a href="" class="view-button">Read More</a>
+            <a href="${article.url}" class="view-button">Read More</a>
         </div>
     </div>
         `;
