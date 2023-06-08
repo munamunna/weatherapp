@@ -1,68 +1,79 @@
+let url="http://api.weatherapi.com/v1/current.json?key=5d7d94bd54ee4615b0a125115230506&q=kochi"
 
-let newsApi="https://newsapi.org/v2/top-headlines?country=us&apiKey=0dcbbb62816947b8bd4f2f8da1b41339"
+// fetch(url).then((res)=>res.json()).then(data=>displayweather(data));
+const cloudOutput=document.querySelector(".cloud")
+const humidityOutput=document.querySelector(".humidity")
+const windOutput=document.querySelector(".wind")
+const app=document.querySelector(".weatherapp")
+const temp=document.querySelector(".temp")
 
-fetch(newsApi).then((res)=>res.json()).then(data=>displayNews(data));
+function fetchweather(){
+  const form = document.getElementById('locationInput');
+const cityInput = document.getElementById('id_city');
 
+form.addEventListener('submit', function(event) {
+  event.preventDefault(); // Prevent form submission
 
-
-
-function displayNews(data) {
-    let htmlData = '';
-
-    for (let article of data.articles) {
-        let name = article.title;
-        let desc = article.description;
-        let image = article.urlToImage;
-        let published = article.publishedAt;
-        let content = article.content;
-
-        htmlData += `
-        <div class="news-card">
-        <div class="image-container">
-            <img src="${image}" alt="">
-        </div>
-        <div class="news-content">
-            <div class="news-title">${name}</div>
-            <div class="news-description">${desc}</div>
-            <a href="${article.url}" class="view-button">Read More</a>
-        </div>
-    </div>
-        `;
-    }
-
-    document.querySelector("#result").innerHTML = htmlData;
-}
-
-
-
-var catagories=["General","Business","Technology","Entertainment","Health","Science","Sports"]
-
-displaycatagories(catagories)
-function displaycatagories(catagories){
-  let data=``
-  for(let cat of catagories){
-    data+=`
-    
-    
-
-      <div>
-            <button class="option" value="${cat}" onclick="filterNewsByCategory('${cat}')">${cat}</button>
-        </div>
-
-    `
-  }
-  document.querySelector("#id_category").innerHTML=data
-}
-
-function filterNewsByCategory(category) {
-    // Fetch news based on the selected category
-    let filteredNewsApi = `https://newsapi.org/v2/top-headlines?country=us&category=${category}&apiKey=0dcbbb62816947b8bd4f2f8da1b41339`;
+  var cityName = cityInput.value;
+  console.log(cityName);
+  // Perform further operations with the cityName value
   
-    fetch(filteredNewsApi)
-      .then(res => res.json())
-      .then(data => displayNews(data));
-  }
+  // Clear the input field after retrieving the value
+  cityInput.value = '';
 
+  fetch(`http://api.weatherapi.com/v1/current.json?key=5d7d94bd54ee4615b0a125115230506&q=${cityName}`).then(res=>res.json()).then(data=>displayweather(data))
+});
 
  
+}
+function displayweather(data){
+
+  let name=data.location.name
+  let icon=data.current.condition.icon
+  let desc=data.current.condition.text
+  let temp=data.current.temp_c
+  let humidity=data.current.humidity
+  let tim=data.current.last_updated
+  
+  console.log(name,icon,temp,desc,humidity);
+
+  htmlData=`
+  
+  
+  <h3 class="brand">the Weather</h3>
+  <div>
+      <h1 class="temp">${temp}° </h1>
+      <div class="city-time">
+          <h1 class="name">${name}</h1>
+          <small>
+              
+              <span class="date">${tim}</span>
+          </small>
+      </div>
+      <div class="weather">
+          <img src="${icon}" alt="" width="50" height="50">
+          <span class="condition">${desc}</span>
+      </div>
+  </div>
+
+
+  `
  
+
+  
+  document.querySelector("#id_result").innerHTML=htmlData
+  cloudOutput.innerHTML=data.current.cloud + "%"
+  humidityOutput.innerHTML=data.current.humidity + "%"
+  windOutput.innerHTML=data.current.wind_kph + "km/h"
+
+ 
+  
+}
+
+
+
+
+
+
+
+
